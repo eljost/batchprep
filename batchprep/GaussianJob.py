@@ -8,16 +8,25 @@ class GaussianJob(Job):
     job_type = "GaussianJob"
     job_ext = ".gjf"
 
-    def __init__(self, route, *args, **kwargs):
+    def __init__(self, route, nstates=None, pop_states=None, *args, **kwargs):
         # Gaussian mem is given in total, and not per core
         kwargs["mem"] *= kwargs["pal"]
         super().__init__(*args, **kwargs)
 
         self.route = route
         self.chk = self.name
+        self.nstates = nstates
+        self.pop_states = pop_states
+
+        if self.pop_states:
+            assert all([0 < pop_state <= nstates for pop_state in pop_states]), \
+                "pop_states must be in the range of nstates!"
+
 
     def render_job(self):
         return super().render_job(
                         route=self.route,
-                        chk=self.chk
+                        chk=self.chk,
+                        nstates=self.nstates,
+                        pop_states=self.pop_states,
         )

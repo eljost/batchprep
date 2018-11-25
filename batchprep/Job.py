@@ -9,7 +9,7 @@ from batchprep.templates import ENV
 class Job:
 
     def __init__(self, charge, mult, mem, pal, xyz, name, queue,
-                 sub_fn=None):
+                 tpl_fn=None, sub_fn=None):
         self.charge = charge
         self.mult = mult
         self.xyz = xyz
@@ -19,6 +19,8 @@ class Job:
 
         if sub_fn:
             self.sub_fn = sub_fn
+        if tpl_fn:
+            self.tpl_fn = tpl_fn
 
         if hasattr(self, "tpl_fn"):
             self.job_tpl = ENV.get_template(self.tpl_fn)
