@@ -10,6 +10,7 @@ import yaml
 from batchprep.GaussianJob import GaussianJob
 from batchprep.OpenMolcasJob import OpenMolcasJob
 from batchprep.OrcaJob import OrcaJob
+from batchprep.QChemJob import QChemJob
 from batchprep.templates import ENV
 
 
@@ -17,6 +18,7 @@ JOB_CLASSES = {
     "gaussian": GaussianJob,
     "orca": OrcaJob,
     "openmolcas": OpenMolcasJob,
+    "qchem": QChemJob,
 }
 
 
@@ -83,10 +85,13 @@ def run():
         handle.write(submit_rendered)
 
     # Bash script to submit jobs locally
-    submit_local_tpl = ENV.get_template("submit_local.sh.tpl")
-    submit_rendered = submit_local_tpl.render(job_dirs=job_dirs)
-    with open("submit_local.sh", "w") as handle:
-        handle.write(submit_rendered)
+    if jobs[0].sublocal_fn:
+        sublocal_tpl = jobs[0].get_sublocal_tpl()
+        sublocal_kwargs = jobs[0].sublocal_kwargs()
+        sublocal_rendered = sublocal_tpl.render(job_dirs=job_dirs,
+                                                **sublocal_kwargs)
+        with open("sublocal.sh", "w") as handle:
+            handle.write(sublocal_rendered)
 
 
 if __name__ == "__main__":

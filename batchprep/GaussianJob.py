@@ -7,6 +7,7 @@ class GaussianJob(Job):
     sub_fn = "subgaussian.sh.tpl"
     job_type = "GaussianJob"
     job_ext = ".gjf"
+    sublocal_fn = "sublocal_g16.tpl"
 
     def __init__(self, route, nstates=None, pop_states=None, *args, **kwargs):
         # Gaussian mem is given in total, and not per core

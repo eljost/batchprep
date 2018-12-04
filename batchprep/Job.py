@@ -7,6 +7,7 @@ import shutil
 from batchprep.templates import ENV
 
 class Job:
+    sublocal_fn = ""
 
     def __init__(self, charge, mult, mem, pal, xyz, name, queue,
                  tpl_fn=None, sub_fn=None):
@@ -82,6 +83,12 @@ class Job:
                     mem=self.mem,
                     **self.queue,
         )
+
+    def get_sublocal_tpl(self):
+        return ENV.get_template(self.sublocal_fn)
+
+    def sublocal_kwargs(self):
+        return {}
 
     def __str__(self):
         return self.job_type
