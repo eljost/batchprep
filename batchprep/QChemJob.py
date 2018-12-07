@@ -3,14 +3,13 @@
 from batchprep.Job import Job
 
 class QChemJob(Job):
-    tpl_fn = "gaussian.gjf.tpl"
+    tpl_fn = "qchem.in.tpl"
     sub_fn = "subqchem.sh.tpl"
     job_type = "QChemJob"
     job_ext = ".in"
     sublocal_fn = "sublocal_qchem.tpl"
 
     def __init__(self, basis, keywords={}, *args, **kwargs):
-        # kwargs["mem"] *= kwargs["pal"]
         super().__init__(*args, **kwargs)
 
         self.basis = basis
