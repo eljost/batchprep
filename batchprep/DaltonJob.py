@@ -17,20 +17,27 @@ class DaltonJob(Job):
     job_ext = ".dal"
     sublocal_fn = "sublocal_dalton.tpl"
 
-    def __init__(self, basis, run, wavefunctions, properties=None,
+    def __init__(self, basis, inp_modules={}, symmetry=True,
                  *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.basis = basis
-        self.run = run
-        self.wavefunctions = wavefunctions
-        self.properties = properties
+        self.inp_modules = inp_modules
+        self.symmetry = symmetry
+        self.sym_str = "" if self.symmetry else "Nosymmetry"
+        # import pdb; pdb.set_trace()
+        # self.run = self.inp_modules["run"]
+        # self.wavefunctions = self.inp_modules["wavefunctions"]
+        # self.properties = self.inp_modules["properties"]
+        self.run = None
+        self.wavefunctions = None
+        self.properties = None
 
         self.mol_tpl = ENV.get_template(self.tpl_mol_fn)
         self.prepare_mol()
 
     def prepare_mol(self):
-        atoms, coords = parse_xyz_file(self.xyz)
+        atoms, coords = parse_xyz_file(self.xyz, ang2bohr=True)
         atom_counter = Counter(atoms)
         elements = list(atom_counter.keys())
         self.atom_types = len(elements)
@@ -47,17 +54,23 @@ class DaltonJob(Job):
                         atom_num,
                         elem_coords,
             ))
-        mol = self.mol_tpl.render(basis=self.basis, atoms_data=atoms_data)
+        mol = self.mol_tpl.render(
+                            basis=self.basis,
+                            charge=self.charge,
+                            sym_str=self.sym_str,
+                            atoms_data=atoms_data
+        )
         return mol
 
     def write_additional(self):
         mol = self.prepare_mol()
-        with open(self.job_dir / "dalton.mol", "w") as handle:
+        with open(self.job_dir / "xyz.mol", "w") as handle:
             handle.write(mol)
 
     def render_job(self):
         return super().render_job(
                         basis=self.basis,
+                        # inp_modules=self.inp_modules,
                         run=self.run,
                         wavefunctions=self.wavefunctions,
                         properties=self.properties

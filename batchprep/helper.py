@@ -1,7 +1,10 @@
 import numpy as np
 
+BOHR2ANG = 0.52917721067
+ANG2BOHR = 1.889726125457828
 
-def parse_xyz_str(xyz_str):
+
+def parse_xyz_str(xyz_str, ang2bohr=False):
     """Parse a xyz string.
 
     Paramters
@@ -32,11 +35,13 @@ def parse_xyz_str(xyz_str):
     ]
     atoms, coords = zip(*[(a, c) for a, *c in atoms_coords])
     coords = np.array(coords, dtype=np.float)
+    if ang2bohr:
+        coords *= ANG2BOHR
     return atoms, coords
 
 
-def parse_xyz_file(xyz_fn):
+def parse_xyz_file(xyz_fn, ang2bohr=False):
     with open(xyz_fn) as handle:
         xyz_str = handle.read()
 
-    return parse_xyz_str(xyz_str)
+    return parse_xyz_str(xyz_str, ang2bohr)

@@ -6,6 +6,9 @@ from jinja2 import Environment, FileSystemLoader, Template
 
 THIS_DIR = os.path.dirname(os.path.realpath(__file__))
 ENV = Environment(
-        loader=FileSystemLoader(os.path.join(THIS_DIR, "templates")),
+        loader=FileSystemLoader([
+                os.path.join(THIS_DIR, "templates"),
+                os.getcwd(),
+        ]),
         trim_blocks=True, lstrip_blocks=True 
 )
