@@ -7,6 +7,7 @@ import sys
 from natsort import natsorted
 import yaml
 
+from batchprep.DaltonJob import DaltonJob
 from batchprep.GaussianJob import GaussianJob
 from batchprep.OpenMolcasJob import OpenMolcasJob
 from batchprep.OrcaJob import OrcaJob
@@ -19,6 +20,7 @@ JOB_CLASSES = {
     "orca": OrcaJob,
     "openmolcas": OpenMolcasJob,
     "qchem": QChemJob,
+    "dalton": DaltonJob,
 }
 
 
@@ -41,8 +43,10 @@ def run():
     # Load xyz files
     cwd = Path(".")
     xyz_glob = inp_dict["xyz"]
-    assert "*" in xyz_glob, "'*' is missing in xyz glob!"
-    xyzs = natsorted(cwd.glob(xyz_glob), key= lambda p: str(p))
+    if "*" not in xyz_glob:
+        xyzs = [Path(xyz_glob), ]
+    else:
+        xyzs = natsorted(cwd.glob(xyz_glob), key= lambda p: str(p))
     assert len(xyzs) > 0, "Couldn't find any .xyz files!"
     print(f"Found {len(xyzs)} .xyz files.")
 

@@ -53,6 +53,8 @@ class Job:
         with open(job_input_path, "w") as handle:
             handle.write(self.render_job())
 
+        self.write_additional()
+
         # Copy .xyz file
         xyz_path = self.job_dir / self.xyz.name
         shutil.copy(self.xyz, xyz_path)
@@ -66,6 +68,9 @@ class Job:
     def copy_and_set(self, src_path, attr_name):
         shutil.copy(src_path, self.job_dir / src_path.name)
         setattr(self, attr_name, src_path.name) 
+
+    def write_additional(self):
+        pass
 
     def render_job(self, **kwargs):
         return self.job_tpl.render(charge=self.charge,
