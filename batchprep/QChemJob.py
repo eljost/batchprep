@@ -9,15 +9,13 @@ class QChemJob(Job):
     job_ext = ".in"
     sublocal_fn = "sublocal_qchem.tpl"
 
-    def __init__(self, basis, keywords={}, *args, **kwargs):
+    def __init__(self, keywords={}, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.basis = basis
         self.keywords = keywords
 
     def render_job(self):
         return super().render_job(
-                        basis=self.basis,
                         keywords=self.keywords,
         )
 

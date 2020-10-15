@@ -8,7 +8,7 @@ class OrcaJob(Job):
     job_type = "OrcaJob"
     job_ext = ".inp"
 
-    def __init__(self, route, blocks, *args, **kwargs):
+    def __init__(self, route, blocks=[], *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.route = route
